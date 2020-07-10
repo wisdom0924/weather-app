@@ -1,29 +1,47 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import Loading from './Loading';
 import * as Location from 'expo-location';
 
 export default class extends React.Component {
+  state = {
+    //10)
+    isLoading: true,
+  };
+
   geoLocation = async () => {
-    //6)
-    //const location = await Location.getCurrentPositionAsync(options); //7)
-    const location = await Location.getCurrentPositionAsync(); //10)
-    console.log(location); //8)
+    try {
+      const response = await Location.requestPermissionsAsync();
+      //const { coords } = await Location.getCurrentPositionAsync(); //6)
+      const {
+        coords: { latitude, longitude },
+      } = await Location.getCurrentPositionAsync(); //8)
+
+      this.setState({ isLoading: false }); //13)
+
+      console.log(coords.latitude, coords.longitude); //7)
+
+      //Send to API and get weather //9)
+    } catch (error) {
+      Alert.alert("Can't find you.", 'So sad');
+    }
   };
   componentDidMount() {
-    this.geoLocation(); //9)
+    this.geoLocation();
   }
   render() {
-    return <Loading />;
+    const { isLoading } = this.state; //11)
+    return isLoading ? <Loading /> : null; //12)
   }
 }
 
 /*
-
-6) 근데 이거는 await functionality임. 따라서 함수를 만들어서(geoLocation), 이걸 async로 해주고 
-7) 공식문서에서 getCurrentPositionAsync를 await로 만들고 변수만들어서 넣어줌
-8) location을 콘솔로 찍어보고, 
-9) geoLocation함수를 componentDidMount에 넣어줌
-10) 그런데, 아직 7)에서 option이 정의되지 않았으므로, 다시 공식문서에서 option을 보고 넣어줌
-⇒ accuracy의 경우, Lowest, Low, High 등등 여러개가 있음. 근데 다 필요없고 그냥 디폴트로 두기 위해 options을 지워줌 ㅎㅎ
-⇒ 여기까지 하고 시뮬레이터 또는 안드로이드 폰 또는 
+6) coords를 가져오기 위해 비구조화할당해줌
+7) 37.4219635 -122.0839871 이렇게 뜸
+8) coords에 latitude, longitude를 넣어서 coords.latitude, coords.longitude 이렇게 길게 안쓰게 변경해줌
+9) 콘솔에 나타나는 정보를 API로 전송해서 날씨를 가져옴
+10) 날씨를 가져오기 전에 state를 작성해줌
+11) render안에 넣어줌
+12) true일때 <Loading/>을 리턴하고 아니면 null을 리턴하게 작성해서 잘 작동하는지 확인
+13) setState를 작성해줌
 */
