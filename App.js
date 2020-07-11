@@ -13,9 +13,18 @@ export default class extends React.Component {
   };
 
   getWeather = async (latitude, longitude) => {
-    const { data } = await axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${API_KEY}&units=metric`);
-    //console.log(data);
-    this.setState({ isLoading: false, temp: data.main.temp }); //11)
+    const {
+      data: {
+        main: { temp },
+        weather, //6)
+      },
+    } = await axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${API_KEY}&units=metric`); //5)
+    this.setState({
+      isLoading: false,
+      //condition: 'Clear', //3)
+      condition: weather[0].main,
+      temp, //5)
+    });
   };
 
   getLocation = async () => {
@@ -33,16 +42,18 @@ export default class extends React.Component {
     this.getLocation();
   }
   render() {
-    const { isLoading, temp } = this.state;
-    return isLoading ? <Loading /> : <Weather temp={Math.round(temp)} />; //10) //12)
+    const { isLoading, temp, condition } = this.state;
+    return isLoading ? <Loading /> : <Weather temp={Math.round(temp)} condition={condition} />;
   }
 }
 
 /*
-10) null대신에 <Weather />을 넣어줌 
-11) <Weather />에 temp를 불러와야 하는데, 얘를 하려면 우리가 원하는 데이터 구조를 먼저 봐야함
-⇒ 브라우저에 켜둔 API정보 구조를 보고 temp의 구조를 확인하면, data.main.temp로 되어있는걸 알 수 있음
-⇒ 기존의 getLocation에 있던 setState를 getWeather로 위치 변경해주고, temp데이터를 넣어줌
-⇒ 여기까지 하면 화면에 온도가 뜨게 됨(브라우저꺼로 보면 현재 위치 온도가 나오고, 시뮬레이터는 미국 온도가 나옴. 안드로이드 폰 앱, 아이폰 앱에서도 확인해봤더니 위치온도가 나옴)
-12) 소수점 처리하기 위해 Math함수 사용해줌
+3) setState안에다가 condition을 넣어줌(확인을 위해 일단 name은 clear로 넣어줌)
+4) condition이 화면에 렌더링되게 Weather에 넣어줌
+근데 condition value는 Weather에 있다고 경고 뜸. 콘솔에 찍힌 정보를 확인해보니 이름 컨디션 코드는 weather 배열 안에 들어있는 걸 알수 있음
+5) es6문법 써서 변경
+6) 4)에서 weather 배열안에 들어있는 날씨 정보 코드를 읽어오기 위해 배열명을 추가해줌
+7) 
+8) 
+9) 
 */
