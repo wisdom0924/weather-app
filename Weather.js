@@ -5,7 +5,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const weatherOptions = {
-  //10)
   Thunderstorm: {
     iconName: 'weather-lightning',
     gradient: ['#373B44', '#4286f4'],
@@ -17,6 +16,8 @@ const weatherOptions = {
   Rain: {
     iconName: 'weather-rainy',
     gradient: ['#00C6FB', '#005BEA'],
+    title: 'Rain',
+    subtitle: '우산 챙기세요',
   },
   Snow: {
     iconName: 'weather-snowy',
@@ -29,6 +30,8 @@ const weatherOptions = {
   Clear: {
     iconName: 'weather-sunny',
     gradient: ['#FF7300', '#FEF253'],
+    title: 'Clear',
+    subtitle: '광합성 하세요^^',
   },
   Clouds: {
     iconName: 'weather-cloudy',
@@ -50,16 +53,18 @@ const weatherOptions = {
   },
 };
 export default function Weather({ temp, condition }) {
-  //13)
   return (
     <LinearGradient colors={weatherOptions[condition].gradient} style={styles.container}>
       <StatusBar barStyle="light-content" />
       <View style={styles.halfContainer}>
         <MaterialCommunityIcons name={weatherOptions[condition].iconName} size={96} color="white" />
         <Text style={styles.temp}>{temp}º</Text>
-        <Text>{condition}</Text>
+        {/* <Text>{condition}</Text> */}
       </View>
-      <View style={styles.halfContainer} />
+      <View style={{ ...styles.halfContainer, ...styles.textContainer }}>
+        <Text style={styles.title}>{weatherOptions[condition].title}</Text>
+        <Text style={styles.subtitle}>{weatherOptions[condition].subtitle}</Text>
+      </View>
     </LinearGradient>
   );
 }
@@ -84,18 +89,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  title: {
+    fontSize: 44,
+    color: 'white',
+    fontWeight: '300',
+    marginBottom: 10,
+  },
+  subtitle: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 24,
+  },
+  textContainer: {
+    paddingHorizontal: 20,
+    alignItems: 'flex-start',
+  },
 });
 
 /*
-10) 큰 오브젝트를 생성해줌 - 그라디언트를 처리해주기 위함
-11) 날씨가 name을 가질때, 예를 들어 Haze를 가질때(소문자로 쓰면 안되고, propTypes에 쓴 스펠 그대로 써줘야 함) 
-⇒ Haze일때 iconName을 설정해줘야 하는데, 이 아이콘 이름은 공식문서의 MaterialCommunityIcons에서 Haze와 관련있는 아이콘 명을 찾아서 적어주면 됨
-12) 렌더링한 MaterialCommunityIcons의 name을 weatherOptions으로 변경해줌
-13) props에 condition을 넣어주고
-14) name={weatherOptions}에 condition을 넣어줌. 그러면 name={weatherOptions[condition]} 이렇게 됨. 그리고, condition에 맞는 icon이 렌더링되게 하기 위해 뒤에 iconName붙여줌. 그러면 name={weatherOptions[condition].iconName}
-⇒ 잘 렌더링 되는지 보기 위해 condition대신 Haze를 넣어서 확인 name={weatherOptions["Haze"].iconName}
-
-15) 날씨가 name을 가질때 배경색상을 변경하기 위해 gradient색상을 줌
-16) 그라디언트 컴포넌트에도 이름에 맞는 색상이 나오게 color값에 object명을 넣어줌
-17) 그런데, 정의하지 않은 name 외의 것이 나오면 에러(TypeError)가 나오므로, 디폴트 아이콘을 넣어주도록 설정해줌 (추후에 해볼것)
+1) 타이틀이 들어갈 View안에 Text를 두개 만들어줌(title, subtitle용)
+2) style 작성
+3) 타이틀 위치를 조정해주기 위해, 기존 styles.halfContainer을 spread로 변경해서 적용되게 바꾸고, 새로운 스타일을 작성해줌(textContainer)
+4) 새롭게 작성된 스타일(textContainer)도 spread문법으로 적용되게 작성해줌 + 렌더링에도 각 스타일 적용
+5) 타이틀이 보이게 object에 추가해줌
+6) 날씨 이름에 따라 다르게 보이게 하기 위해 렌더링에 object를 걸어줌
 */
