@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native'; //8)
 
 export default function Loading() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Getting the fucking weather ggggㄹㄹㄹ</Text>
+      <StatusBar barStyle="dark-content" />
+      <Text style={styles.text}>Getting the fucking weather</Text>
     </View>
   );
 }
@@ -22,3 +23,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 });
+
+/*
+8) StatusBar를 import해주고
+9) barStyle을 넣어줌
+*/
