@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, StatusBar, Image, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, StatusBar, Image, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 // import { MaterialCommunityIcons } from '@expo/vector-icons';
-import styled from 'styled-components';
 
 const weatherOptions = {
   Thunderstorm: {
@@ -36,7 +35,7 @@ const weatherOptions = {
   },
   Clear: {
     iconName: 'weather-sunny',
-    gradient: ['#FEF253', '#FF7300'],
+    gradient: ['#FF7300', '#FEF253'],
     title: 'Clear',
     subtitle: '광합성 하세요^^',
   },
@@ -104,8 +103,12 @@ const weatherOptions = {
     subtitle: 'Thanks a lot China',
   },
 };
-
-export default function Weather({ temp, condition, description, icon, name, sunrise, sunset, humidity, feels_like, temp_min, temp_max, dt }) {
+const logo = {
+  uri: 'https://reactnative.dev/img/tiny_logo.png',
+  width: 64,
+  height: 64,
+};
+export default function Weather({ temp, condition, description, icon, name, date }) {
   return (
     <LinearGradient colors={weatherOptions[condition].gradient} style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -127,32 +130,29 @@ export default function Weather({ temp, condition, description, icon, name, sunr
           {/* <Text>오늘({date})의 날씨</Text> */}
           <Text style={styles.title}>{weatherOptions[condition].title}</Text>
           <Text style={styles.subtitle}>{weatherOptions[condition].subtitle}</Text>
-          <Text style={styles.desc2}>
-            오늘({dt}) : 현재 날씨 {description}. 현재 기온은 {temp}이며, 오늘 예상 최고 기온은 {temp_max}, 최저기온은 {temp_min}입니다.
-          </Text>
 
-          <View style={styles.table}>
+          {/* <View style={styles.table}>
             <View style={styles.halfTable}>
               <View style={styles.halfTableInner}>
-                <Text style={styles.tableSubtit}>일출</Text>
-                <Text style={styles.tableValue}>{sunrise}</Text>
+                <Text>일출</Text>
+                <Text>오전 5:35</Text>
               </View>
               <View style={styles.halfTableInner}>
-                <Text style={styles.tableSubtit}>일몰</Text>
-                <Text style={styles.tableValue}>{sunset}</Text>
+                <Text>일몰</Text>
+                <Text>오후 7:41</Text>
               </View>
             </View>
             <View style={styles.halfTable}>
               <View style={styles.halfTableInner}>
-                <Text style={styles.tableSubtit}>습도</Text>
-                <Text style={styles.tableValue}>{humidity}%</Text>
+                <Text>습도</Text>
+                <Text>76%</Text>
               </View>
               <View style={styles.halfTableInner}>
-                <Text style={styles.tableSubtit}>체감온도</Text>
-                <Text style={styles.tableValue}>{feels_like}º</Text>
+                <Text>체감온도</Text>
+                <Text>32도</Text>
               </View>
             </View>
-          </View>
+          </View> */}
         </View>
       </View>
     </LinearGradient>
@@ -165,20 +165,9 @@ Weather.propTypes = {
   description: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  sunrise: PropTypes.string.isRequired,
-  sunset: PropTypes.string.isRequired,
-  humidity: PropTypes.number.isRequired,
-  feels_like: PropTypes.number.isRequired,
-  temp_min: PropTypes.number.isRequired,
-  temp_max: PropTypes.number.isRequired,
-  dt: PropTypes.string.isRequired,
 };
 
 const styles = StyleSheet.create({
-  safecontainer: {
-    flex: 1,
-    // marginTop: Constants.StatusBarHeight,
-  },
   container: {
     flex: 1,
     // justifyContent: 'center',
@@ -199,9 +188,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'skyblue',
-    // borderColor: 'yellow',
-    // borderWidth: 2,
   },
   textContainer: {
     paddingHorizontal: 20,
@@ -209,7 +195,7 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
   cityname: {
-    color: '#333',
+    color: 'white',
   },
   image: {
     width: 100,
@@ -221,15 +207,10 @@ const styles = StyleSheet.create({
   },
   desc: {
     color: 'white',
-    fontSize: 20,
-    marginTop: 10,
-  },
-  desc2: {
-    color: 'white',
     marginTop: 10,
   },
   title: {
-    fontSize: 36,
+    fontSize: 44,
     color: 'white',
     fontWeight: '300',
     marginBottom: 10,
@@ -239,35 +220,28 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 24,
   },
-  table: {
-    // flex: 1,
-    width: '100%',
-    borderTopColor: 'white',
-    borderBottomColor: 'white',
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  halfTable: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    paddingBottom: 5,
-  },
-  halfTableInner: {
-    width: '50%',
-  },
-  tableSubtit: {
-    fontSize: 12,
-    color: 'white',
-  },
-  tableValue: {
-    fontSize: 18,
-    color: 'white',
-    fontWeight: '700',
-  },
+  // table: {
+  //   flex: 1,
+  //   borderColor: 'red',
+  //   borderWidth: 1,
+  //   // justifyContent: 'center',
+  //   // alignItems: 'center',
+  //   // alignItems: 'stretch',
+  //   // flexWrap: 'wrap',
+  // },
+  // halfTable: {
+  //   borderColor: 'blue',
+  //   borderWidth: 1,
+  //   // flex: 1,
+  //   // flex: 1,
+  //   // flexDirection: 'row',
+  //   // alignItems: 'stretch',
+  //   // alignContent: 'stretch',
+  // },
+  // halfTableInner: {
+  //   borderColor: 'green',
+  //   borderWidth: 1,
+  //   // alignItems: 'stretch',
+  //   // flex: 1,
+  // },
 });
