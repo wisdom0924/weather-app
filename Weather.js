@@ -1,17 +1,21 @@
 import React from 'react';
-import { StyleSheet, View, Text, StatusBar } from 'react-native';
+import { AppRegistry, StyleSheet, View, Text, StatusBar, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+// import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const weatherOptions = {
   Thunderstorm: {
     iconName: 'weather-lightning',
     gradient: ['#373B44', '#4286f4'],
+    title: 'Thunderstorm in the house',
+    subtitle: 'Actually, outside of the house',
   },
   Drizzle: {
     iconName: 'weather-hail',
     gradient: ['#89F7FE', '#66A6FF'],
+    title: 'Drizzle',
+    subtitle: 'Is like rain, but gay 🏳️‍🌈',
   },
   Rain: {
     iconName: 'weather-rainy',
@@ -22,6 +26,8 @@ const weatherOptions = {
   Snow: {
     iconName: 'weather-snowy',
     gradient: ['#7DE2FC', '#B9B6E5'],
+    title: 'Cold as balls',
+    subtitle: 'Do you want to build a snowman? Fuck no.',
   },
   Atmosphere: {
     iconName: 'weather-hail',
@@ -36,14 +42,20 @@ const weatherOptions = {
   Clouds: {
     iconName: 'weather-cloudy',
     gradient: ['#D7D2CC', '#304352'],
+    title: 'Clouds',
+    subtitle: 'I know, fucking boring',
   },
   Mist: {
     iconName: 'weather-hail',
     gradient: ['#4DA0B0', '#D39D38'],
+    title: 'Mist!',
+    subtitle: "It's like you have no glasses on.",
   },
   Dust: {
     iconName: 'weather-hail',
     gradient: ['#4DA0B0', '#D39D38'],
+    title: 'Dusty',
+    subtitle: 'Thanks a lot China 🖕🏻',
   },
   Haze: {
     iconName: 'weather-hail',
@@ -52,14 +64,15 @@ const weatherOptions = {
     subtitle: "Just don't go outside.",
   },
 };
-export default function Weather({ temp, condition }) {
+export default function Weather({ temp, condition, description, icon }) {
   return (
     <LinearGradient colors={weatherOptions[condition].gradient} style={styles.container}>
       <StatusBar barStyle="light-content" />
       <View style={styles.halfContainer}>
-        <MaterialCommunityIcons name={weatherOptions[condition].iconName} size={96} color="white" />
+        {/* <MaterialCommunityIcons name={weatherOptions[condition].iconName} size={96} color="white" /> */}
+        <Image style={styles.image} source={{ uri: `http://openweathermap.org/img/wn/${icon}@2x.png` }} />
         <Text style={styles.temp}>{temp}º</Text>
-        {/* <Text>{condition}</Text> */}
+        <Text style={styles.miniTitle}>{description}</Text>
       </View>
       <View style={{ ...styles.halfContainer, ...styles.textContainer }}>
         <Text style={styles.title}>{weatherOptions[condition].title}</Text>
@@ -72,6 +85,8 @@ export default function Weather({ temp, condition }) {
 Weather.propTypes = {
   temp: PropTypes.number.isRequired,
   condition: PropTypes.oneOf(['Thunderstorm', 'Drizzle', 'Rain', 'Snow', 'Atmosphere', 'Clear', 'Clouds', 'Haze', 'Mist', 'Dust']).isRequired,
+  description: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -79,6 +94,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  image: {
+    width: '100px',
+    height: '100px',
   },
   temp: {
     fontSize: 42,
@@ -104,13 +123,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'flex-start',
   },
+  miniTitle: {
+    color: 'white',
+    marginTop: 10,
+  },
 });
-
-/*
-1) 타이틀이 들어갈 View안에 Text를 두개 만들어줌(title, subtitle용)
-2) style 작성
-3) 타이틀 위치를 조정해주기 위해, 기존 styles.halfContainer을 spread로 변경해서 적용되게 바꾸고, 새로운 스타일을 작성해줌(textContainer)
-4) 새롭게 작성된 스타일(textContainer)도 spread문법으로 적용되게 작성해줌 + 렌더링에도 각 스타일 적용
-5) 타이틀이 보이게 object에 추가해줌
-6) 날씨 이름에 따라 다르게 보이게 하기 위해 렌더링에 object를 걸어줌
-*/

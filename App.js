@@ -18,18 +18,33 @@ export default class extends React.Component {
         main: { temp },
         weather, //6)
       },
-    } = await axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${API_KEY}&units=metric`); //5)
+    } = await axios({
+      method: 'get',
+      url: 'http://api.openweathermap.org/data/2.5/weather',
+      params: {
+        lat: `${latitude}`,
+        lon: `${longitude}`,
+        // lat: 34.0194,
+        // lon: 118.41134,
+        APPID: `${API_KEY}`,
+        units: 'metric',
+        lang: 'kr',
+      },
+    });
     this.setState({
       isLoading: false,
-      //condition: 'Clear', //3)
       condition: weather[0].main,
-      temp, //5)
+      // condition: 'Clouds',
+      temp,
+      description: weather[0].description,
+      icon: weather[0].icon,
     });
   };
 
   getLocation = async () => {
     try {
       await Location.requestPermissionsAsync();
+      // console.log(response);
       const {
         coords: { latitude, longitude },
       } = await Location.getCurrentPositionAsync();
@@ -42,18 +57,7 @@ export default class extends React.Component {
     this.getLocation();
   }
   render() {
-    const { isLoading, temp, condition } = this.state;
-    return isLoading ? <Loading /> : <Weather temp={Math.round(temp)} condition={condition} />;
+    const { isLoading, temp, condition, description, icon } = this.state;
+    return isLoading ? <Loading /> : <Weather temp={Math.round(temp)} condition={condition} description={description} icon={icon} />;
   }
 }
-
-/*
-3) setState안에다가 condition을 넣어줌(확인을 위해 일단 name은 clear로 넣어줌)
-4) condition이 화면에 렌더링되게 Weather에 넣어줌
-근데 condition value는 Weather에 있다고 경고 뜸. 콘솔에 찍힌 정보를 확인해보니 이름 컨디션 코드는 weather 배열 안에 들어있는 걸 알수 있음
-5) es6문법 써서 변경
-6) 4)에서 weather 배열안에 들어있는 날씨 정보 코드를 읽어오기 위해 배열명을 추가해줌
-7) 
-8) 
-9) 
-*/
