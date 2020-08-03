@@ -1,7 +1,7 @@
 self.__precacheManifest = [
   {
-    "revision": "a0cb7980d0872b8be467",
-    "url": "/weather-app/static/js/app.0456de20.chunk.js"
+    "revision": "48952531c39738d88f75",
+    "url": "/weather-app/static/js/app.b6f11611.chunk.js"
   },
   {
     "revision": "f61a85108820cca45134",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/weather-app/expo-service-worker.js"
   },
   {
-    "revision": "481815b2f7d1400b9997a2b968fbfeac",
+    "revision": "74ba1c5e8d8789c23c35b3262d36b9ec",
     "url": "/weather-app/index.html"
   },
   {
