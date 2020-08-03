@@ -26,7 +26,7 @@ export default class extends React.Component {
       },
     } = await axios({
       method: 'get',
-      url: 'http://api.openweathermap.org/data/2.5/weather',
+      url: 'https://api.openweathermap.org/data/2.5/weather',
       params: {
         lat: `${latitude}`,
         lon: `${longitude}`,
