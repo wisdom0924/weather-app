@@ -126,7 +126,7 @@ export default function Weather({ temp, condition, description, icon, name, sunr
                 <Image
                   style={styles.image}
                   source={{
-                    uri: `http://openweathermap.org/img/wn/${icon}@2x.png`,
+                    uri: `https://openweathermap.org/img/wn/${icon}@2x.png`,
                   }}
                 />
               </View>
