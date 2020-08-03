@@ -17,11 +17,12 @@ export default class extends React.Component {
   getWeather = async (latitude, longitude) => {
     const {
       data: {
-        main: { temp, humidity, feels_like, temp_min, temp_max },
-        weather, //6)
+        main: { temp, humidity, feels_like, temp_min, temp_max, pressure },
+        weather,
         name,
         sys: { sunrise, sunset },
         dt,
+        visibility,
       },
     } = await axios({
       method: 'get',
@@ -31,6 +32,9 @@ export default class extends React.Component {
         lon: `${longitude}`,
         // lat: 38.0194,
         // lon: 118.41134,
+        // 지역테스트
+        // lat: 37.620846,
+        // lon: 126.69757999999997,
         APPID: `${API_KEY}`,
         units: 'metric',
         lang: 'kr',
@@ -39,18 +43,20 @@ export default class extends React.Component {
     this.setState({
       isLoading: false,
       condition: weather[0].main,
-      // condition: 'Haze',
+      // condition: 'Tornado',
       temp,
       humidity,
       feels_like,
       description: weather[0].description,
       icon: weather[0].icon,
       name,
-      sunrise: moment.unix(sunrise).format('hh:mm a'),
-      sunset: moment.unix(sunset).format('hh:mm a'),
+      sunrise: moment.unix(sunrise).format('a hh:mm'),
+      sunset: moment.unix(sunset).format('a hh:mm'),
       temp_min,
       temp_max,
-      dt: moment.unix(dt).format('MMMM Do'),
+      dt: moment.unix(dt).format('MMMM Do dddd'),
+      visibility: visibility / 1000,
+      pressure,
     });
   };
 
@@ -71,7 +77,7 @@ export default class extends React.Component {
     this.getLocation();
   }
   render() {
-    const { isLoading, temp, condition, description, icon, name, sunrise, sunset, humidity, feels_like, temp_min, temp_max, nowtime, dt } = this.state;
+    const { isLoading, temp, condition, description, icon, name, sunrise, sunset, humidity, feels_like, temp_min, temp_max, nowtime, dt, pressure, visibility } = this.state;
     return isLoading ? (
       <Loading />
     ) : (
@@ -88,20 +94,9 @@ export default class extends React.Component {
         temp_min={temp_min}
         temp_max={temp_max}
         dt={dt}
+        pressure={pressure}
+        visibility={visibility}
       />
     );
   }
 }
-
-/*
-- 추가 데이터 넣기
-- scroll
-- 배경색 변경
-- 문구 변경
-- 로딩 변경
-- 도시 언어 변경
-- 오늘 날짜 넣기 (0)
-- SafeAreaView,
-- 가능하면 지역도 추가할 수 있게 만들어주기
-
-*/

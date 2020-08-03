@@ -1,73 +1,76 @@
 import React from 'react';
-import { StyleSheet, View, Text, StatusBar, Image, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, StatusBar, Image, ScrollView, SafeAreaView, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 // import { MaterialCommunityIcons } from '@expo/vector-icons';
-import styled from 'styled-components';
 
 const weatherOptions = {
   Thunderstorm: {
     iconName: 'weather-lightning',
-    gradient: ['#373B44', '#4286f4'],
-    title: 'Thunderstorm in the house',
-    subtitle: 'Actually, outside of the house',
+    gradient: ['#09060D', '#7E6278', '#020303'],
+    title: 'Thunderstorm',
+    subtitle: '안전사고에 유의하세요.',
   },
   Drizzle: {
     iconName: 'weather-hail',
-    gradient: ['#89F7FE', '#66A6FF'],
+    gradient: ['#C2D5E7', '#809FB0', '#2D393D', '#121514'],
     title: 'Drizzle',
-    subtitle: 'Is like rain, but gay',
+    subtitle: '가늘고 조용히 보슬비가 내립니다.',
   },
   Rain: {
     iconName: 'weather-rainy',
     gradient: ['#00C6FB', '#005BEA'],
     title: 'Rain',
-    subtitle: '우산 챙기세요',
+    subtitle: '우산 꼭 챙기세요',
   },
   Snow: {
     iconName: 'weather-snowy',
-    gradient: ['#7DE2FC', '#B9B6E5'],
-    title: 'Cold as balls',
-    subtitle: 'Do you want to build a snowman? Fuck no.',
+    gradient: ['#ddddee', '#ccddff', '#bbccee', '#aaaacc', '#B9B6E5'],
+    title: 'Snow',
+    subtitle: 'Do you want to build a snowman?',
   },
   Atmosphere: {
     iconName: 'weather-hail',
     gradient: ['#89F7FE', '#66A6FF'],
+    title: 'Atmosphere',
+    subtitle: '현재 대기 상태를 알려드립니다.',
   },
   Clear: {
     iconName: 'weather-sunny',
     gradient: ['#FEF253', '#FF7300'],
+    gradient: ['#9FDBF8', '#7CC7F7', '#5EB5F7', '#3383E6'],
     title: 'Clear',
     subtitle: '광합성 하세요^^',
   },
   Clouds: {
     iconName: 'weather-cloudy',
-    gradient: ['#D7D2CC', '#304352'],
+    gradient: ['#EEF2F3', '#C1C1C1', '#AAAAAA'],
     title: 'Clouds',
-    subtitle: 'I know, fucking boring',
+    subtitle: '구름낀 날씨로 흐릿하지만 선크림은 꼭 바르세요. ',
   },
   Mist: {
     iconName: 'weather-hail',
-    gradient: ['#4DA0B0', '#D39D38'],
+    gradient: ['#f8f8f8', '#ececec', '#e0e0e0', '#d4d4d4', '#c7c7c7', '#b6b6b6', '#aaaaaa'],
     title: 'Mist!',
-    subtitle: "It's like you have no glasses on.",
+    subtitle: '옅은 안개(박무)가 낀 날입니다. 운전 조심하세요.',
   },
 
   Smoke: {
     iconName: 'weather-hail',
-    gradient: ['#4DA0B0', '#D39D38'],
+    gradient: ['#99aaaa', '#AB9484', '#A38B79'],
     title: 'Smoke',
-    subtitle: 'Thanks a lot China',
+    subtitle: '마스크 준비하세요.',
   },
   Haze: {
     iconName: 'weather-hail',
-    gradient: ['#4DA0B0', '#D39D38'],
+    gradient: ['#E1DDD4', '#E5E6E4', '#DBD7CE', '#DFDBD2', '#9B9B9B'],
     title: 'Haze',
-    subtitle: 'Thanks a lot China',
+    subtitle: '연무가 낀 날입니다.',
   },
   Dust: {
+    //미세먼지
     iconName: 'weather-hail',
-    gradient: ['#4DA0B0', '#D39D38'],
+    gradient: ['#b8cbb8', '#e2c58b', '#c2ce9c', '#7edbdc'],
     title: 'Dusty',
     subtitle: 'Thanks a lot China',
   },
@@ -76,85 +79,105 @@ const weatherOptions = {
     iconName: 'weather-hail',
     gradient: ['#4DA0B0', '#D39D38'],
     title: 'Fog',
-    subtitle: 'Thanks a lot China',
+    subtitle: '안개가 짙습니다. 가시거리가 매우 짧으니 교통 안전에 유의하세요.  ',
   },
 
   Sand: {
+    //황사
     iconName: 'weather-hail',
-    gradient: ['#4DA0B0', '#D39D38'],
+    gradient: ['#A29E9D', '#D1C5B9', '#E8D9C6', '#E1D1C1', '#E7CFB5'],
     title: 'Sand',
-    subtitle: 'Thanks a lot China',
+    subtitle: '윽 황사😡',
   },
   Ash: {
     iconName: 'weather-hail',
-    gradient: ['#4DA0B0', '#D39D38'],
+    gradient: ['#606c88', '#3f4c6b'],
     title: 'Ash',
-    subtitle: 'Thanks a lot China',
+    subtitle: '화산재가 날린다고오? 이게 나올 일이 있을까?;',
   },
   Squall: {
     iconName: 'weather-hail',
-    gradient: ['#4DA0B0', '#D39D38'],
+    gradient: ['#a2b6df', '#6b8cce', '#0c3483'],
     title: 'Squall',
-    subtitle: 'Thanks a lot China',
+    subtitle: '돌풍을 동반한 많은 비가 내립니다. 가능한 외출을 자제하세요.',
   },
   Tornado: {
     iconName: 'weather-hail',
-    gradient: ['#4DA0B0', '#D39D38'],
+    gradient: ['#360033', '#0b8793'],
     title: 'Tornado',
-    subtitle: 'Thanks a lot China',
+    subtitle: '토네이도, 혹시나 요게 나오면 지하로 대피하세요',
   },
 };
 
-export default function Weather({ temp, condition, description, icon, name, sunrise, sunset, humidity, feels_like, temp_min, temp_max, dt }) {
+export default function Weather({ temp, condition, description, icon, name, sunrise, sunset, humidity, feels_like, temp_min, temp_max, dt, pressure, visibility }) {
   return (
     <LinearGradient colors={weatherOptions[condition].gradient} style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <View style={styles.inner1}>
-        <Text style={styles.cityname}>{name}</Text>
-      </View>
-      <View style={styles.inner2}>
-        <View style={styles.halfContainer}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: `http://openweathermap.org/img/wn/${icon}@2x.png`,
-            }}
-          />
-          <Text style={styles.temp}>{temp}º</Text>
-          <Text style={styles.desc}>{description}</Text>
-        </View>
-        <View style={{ ...styles.halfContainer, ...styles.textContainer }}>
-          {/* <Text>오늘({date})의 날씨</Text> */}
-          <Text style={styles.title}>{weatherOptions[condition].title}</Text>
-          <Text style={styles.subtitle}>{weatherOptions[condition].subtitle}</Text>
-          <Text style={styles.desc2}>
-            오늘({dt}) : 현재 날씨 {description}. 현재 기온은 {temp}이며, 오늘 예상 최고 기온은 {temp_max}, 최저기온은 {temp_min}입니다.
-          </Text>
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <StatusBar barStyle="light-content" />
 
-          <View style={styles.table}>
-            <View style={styles.halfTable}>
-              <View style={styles.halfTableInner}>
-                <Text style={styles.tableSubtit}>일출</Text>
-                <Text style={styles.tableValue}>{sunrise}</Text>
+          <View style={styles.inner1}>
+            <Text style={styles.cityname}>{name}</Text>
+          </View>
+
+          <View style={styles.inner2}>
+            <View style={styles.halfContainer}>
+              <View>
+                <Image
+                  style={styles.image}
+                  source={{
+                    uri: `http://openweathermap.org/img/wn/${icon}@2x.png`,
+                  }}
+                />
               </View>
-              <View style={styles.halfTableInner}>
-                <Text style={styles.tableSubtit}>일몰</Text>
-                <Text style={styles.tableValue}>{sunset}</Text>
-              </View>
+              <Text style={{ ...styles.temp, ...styles.textShadow }}>{temp}º</Text>
+              <Text style={{ ...styles.desc, ...styles.textShadow }}>{description}</Text>
             </View>
-            <View style={styles.halfTable}>
-              <View style={styles.halfTableInner}>
-                <Text style={styles.tableSubtit}>습도</Text>
-                <Text style={styles.tableValue}>{humidity}%</Text>
-              </View>
-              <View style={styles.halfTableInner}>
-                <Text style={styles.tableSubtit}>체감온도</Text>
-                <Text style={styles.tableValue}>{feels_like}º</Text>
+
+            <View style={{ ...styles.halfContainer, ...styles.textContainer }}>
+              {/* <Text>오늘({date})의 날씨</Text> */}
+              <Text style={{ ...styles.title, ...styles.textShadow }}>{weatherOptions[condition].title}</Text>
+              <Text style={{ ...styles.subtitle, ...styles.textShadow }}>{weatherOptions[condition].subtitle}</Text>
+              <Text style={styles.desc2}>
+                오늘({dt}) : 현재 날씨 {description}. 현재 기온은 {temp}º이며, 오늘 예상 최고 기온은 {temp_max}º, 최저기온은 {temp_min}º입니다.
+              </Text>
+
+              <View style={styles.table}>
+                <View style={styles.halfTable}>
+                  <View style={styles.halfTableInner}>
+                    <Text style={styles.tableSubtit}>일출</Text>
+                    <Text style={styles.tableValue}>{sunrise}</Text>
+                  </View>
+                  <View style={styles.halfTableInner}>
+                    <Text style={styles.tableSubtit}>일몰</Text>
+                    <Text style={styles.tableValue}>{sunset}</Text>
+                  </View>
+                </View>
+                <View style={styles.halfTable}>
+                  <View style={styles.halfTableInner}>
+                    <Text style={styles.tableSubtit}>습도</Text>
+                    <Text style={styles.tableValue}>{humidity}%</Text>
+                  </View>
+                  <View style={styles.halfTableInner}>
+                    <Text style={styles.tableSubtit}>체감온도</Text>
+                    <Text style={styles.tableValue}>{feels_like}º</Text>
+                  </View>
+                </View>
+                <View style={styles.halfTable}>
+                  <View style={styles.halfTableInner}>
+                    <Text style={styles.tableSubtit}>기압</Text>
+                    <Text style={styles.tableValue}>{pressure}hPa</Text>
+                  </View>
+                  <View style={styles.halfTableInner}>
+                    <Text style={styles.tableSubtit}>가시거리</Text>
+                    <Text style={styles.tableValue}>{visibility}km</Text>
+                  </View>
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      </View>
+        </ScrollView>
+      </SafeAreaView>
     </LinearGradient>
   );
 }
@@ -172,25 +195,24 @@ Weather.propTypes = {
   temp_min: PropTypes.number.isRequired,
   temp_max: PropTypes.number.isRequired,
   dt: PropTypes.string.isRequired,
+  pressure: PropTypes.number.isRequired,
+  visibility: PropTypes.number.isRequired,
 };
 
 const styles = StyleSheet.create({
   safecontainer: {
     flex: 1,
-    // marginTop: Constants.StatusBarHeight,
   },
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
-  box: {
-    flex: 1,
-  },
+
   inner1: {
     flex: 1,
-    justifyContent: 'center',
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
   inner2: {
     flex: 10,
@@ -199,14 +221,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'skyblue',
-    // borderColor: 'yellow',
-    // borderWidth: 2,
+    paddingVertical: 30,
   },
   textContainer: {
     paddingHorizontal: 20,
     alignItems: 'flex-start',
-    // flex: 1,
   },
   cityname: {
     color: '#333',
@@ -214,14 +233,17 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
+    resizeMode: 'stretch',
   },
+
   temp: {
-    fontSize: 42,
+    fontSize: 48,
     color: 'white',
   },
+
   desc: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 24,
     marginTop: 10,
   },
   desc2: {
@@ -229,10 +251,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   title: {
-    fontSize: 36,
+    fontSize: 16,
     color: 'white',
     fontWeight: '300',
-    marginBottom: 10,
+    marginBottom: 2,
+    ...Platform.select({
+      android: {
+        marginBottom: 0,
+      },
+    }),
   },
   subtitle: {
     color: 'white',
@@ -240,7 +267,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   table: {
-    // flex: 1,
     width: '100%',
     borderTopColor: 'white',
     borderBottomColor: 'white',
@@ -256,7 +282,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 10,
-    paddingBottom: 5,
+    borderBottomColor: 'white',
+    borderStyle: 'dotted',
+    borderBottomWidth: 1,
   },
   halfTableInner: {
     width: '50%',
